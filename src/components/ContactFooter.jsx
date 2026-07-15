@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { portfolioData } from "@/data/portfolio";
 import { Mail, Phone, Link2, ExternalLink, ArrowRight } from "lucide-react";
 
@@ -90,8 +91,10 @@ export default function ContactFooter() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center text-primary-foreground font-black text-xs">F</div>
+          <div className="flex items-center gap-3">
+            <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0">
+              <Image src="/me.png" alt="Faizan Ullah" fill className="object-cover" />
+            </div>
             <span className="font-bold text-foreground text-sm">Faizan Ullah</span>
           </div>
           <p className="text-muted-foreground text-sm">
