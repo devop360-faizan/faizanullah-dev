@@ -102,7 +102,7 @@ export default function HeroSection() {
             </a>
             <a
               href="/resume.pdf"
-              download
+              download="Faizan-Ullah-Resume.pdf"
               className="flex items-center gap-2 px-6 py-3 border border-border bg-muted/40 text-foreground font-semibold rounded-xl hover:bg-muted/80 transition-all hover:scale-105 text-sm"
             >
               <Download className="w-4 h-4" />
