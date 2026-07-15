@@ -24,11 +24,11 @@ export default function ProjectsGrid() {
               Featured Projects
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl">
-              15+ delivered projects — here are 9 highlights spanning AI, SaaS, and enterprise backends.
+              20+ delivered projects — here are 9 highlights spanning AI, SaaS, and enterprise backends.
             </p>
           </div>
           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border whitespace-nowrap self-start">
-            <span className="text-2xl font-black text-foreground">15+</span>
+            <span className="text-2xl font-black text-foreground">20+</span>
             <span className="text-muted-foreground text-sm">Projects Delivered</span>
           </div>
         </motion.div>
