@@ -3,18 +3,40 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Code2,
-  Database,
-  Server,
-  Layers,
-  Wrench,
   Sparkles,
-  Terminal,
-  Cpu,
-  ShieldCheck,
+  Wrench,
   Zap,
   CheckCircle2,
+  Cpu,
+  Layers,
+  Terminal,
+  ShieldCheck,
+  Server,
+  Globe,
 } from "lucide-react";
+
+import {
+  SiPhp,
+  SiLaravel,
+  SiMysql,
+  SiNodedotjs,
+  SiExpress,
+  SiPython,
+  SiPostgresql,
+  SiCodeigniter,
+  SiGit,
+  SiGithub,
+  SiBitbucket,
+  SiJavascript,
+  SiReact,
+  SiPhpstorm,
+  SiPostman,
+  SiFigma,
+  SiTrello,
+  SiStripe,
+} from "react-icons/si";
+
+import { VscCode } from "react-icons/vsc";
 
 const skillCategories = [
   { id: "all", label: "All Stack" },
@@ -33,7 +55,7 @@ const skillsData = [
     desc: "OOP, MVC patterns, PSR standards, high-performance web scripts.",
     color: "from-purple-500 to-indigo-600",
     bgGlow: "bg-purple-500/10 border-purple-500/20 text-purple-400",
-    icon: <Code2 className="w-5 h-5 text-purple-400" />,
+    icon: <SiPhp className="w-6 h-6 text-[#777BB4]" />,
   },
   {
     name: "Laravel",
@@ -43,7 +65,7 @@ const skillsData = [
     desc: "RESTful APIs, Sanctum Auth, Eloquent ORM, Queues, Multi-Tenancy.",
     color: "from-red-500 to-orange-600",
     bgGlow: "bg-red-500/10 border-red-500/20 text-red-400",
-    icon: <Server className="w-5 h-5 text-red-400" />,
+    icon: <SiLaravel className="w-6 h-6 text-[#FF2D20]" />,
   },
   {
     name: "RESTful APIs",
@@ -53,7 +75,7 @@ const skillsData = [
     desc: "Sanctum JWT auth, FCM push notifications, WebSockets, Rate Limiting.",
     color: "from-cyan-500 to-blue-600",
     bgGlow: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400",
-    icon: <Zap className="w-5 h-5 text-cyan-400" />,
+    icon: <Zap className="w-6 h-6 text-cyan-400" />,
   },
   {
     name: "MySQL",
@@ -63,7 +85,7 @@ const skillsData = [
     desc: "Schema design, Indexing optimization, Complex Queries, Transactions.",
     color: "from-blue-500 to-cyan-600",
     bgGlow: "bg-blue-500/10 border-blue-500/20 text-blue-400",
-    icon: <Database className="w-5 h-5 text-blue-400" />,
+    icon: <SiMysql className="w-6 h-6 text-[#4479A1]" />,
   },
   {
     name: "DB Optimization",
@@ -73,7 +95,7 @@ const skillsData = [
     desc: "Query profiling, Indexing strategies, Caching, Bottleneck elimination.",
     color: "from-emerald-500 to-teal-600",
     bgGlow: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
-    icon: <Cpu className="w-5 h-5 text-emerald-400" />,
+    icon: <Cpu className="w-6 h-6 text-emerald-400" />,
   },
   {
     name: "Node.js & Express",
@@ -83,7 +105,7 @@ const skillsData = [
     desc: "Event-driven asynchronous services, REST endpoints, Middleware.",
     color: "from-green-500 to-emerald-600",
     bgGlow: "bg-green-500/10 border-green-500/20 text-green-400",
-    icon: <Terminal className="w-5 h-5 text-green-400" />,
+    icon: <SiNodedotjs className="w-6 h-6 text-[#5FA04E]" />,
   },
   {
     name: "Python Flask",
@@ -93,7 +115,7 @@ const skillsData = [
     desc: "AI/NLP integration services, microservice APIs, JSON processing.",
     color: "from-amber-500 to-yellow-600",
     bgGlow: "bg-amber-500/10 border-amber-500/20 text-amber-400",
-    icon: <Code2 className="w-5 h-5 text-amber-400" />,
+    icon: <SiPython className="w-6 h-6 text-[#3776AB]" />,
   },
   {
     name: "PostgreSQL",
@@ -103,7 +125,7 @@ const skillsData = [
     desc: "Relational data modeling, JSONB fields, Triggers, Views.",
     color: "from-indigo-500 to-blue-700",
     bgGlow: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400",
-    icon: <Database className="w-5 h-5 text-indigo-400" />,
+    icon: <SiPostgresql className="w-6 h-6 text-[#4169E1]" />,
   },
   {
     name: "Git & Version Control",
@@ -113,7 +135,7 @@ const skillsData = [
     desc: "GitHub, Bitbucket, Branching strategies, PR code reviews, Merge resolution.",
     color: "from-orange-500 to-rose-600",
     bgGlow: "bg-orange-500/10 border-orange-500/20 text-orange-400",
-    icon: <Layers className="w-5 h-5 text-orange-400" />,
+    icon: <SiGit className="w-6 h-6 text-[#F05032]" />,
   },
   {
     name: "CodeIgniter",
@@ -121,9 +143,9 @@ const skillsData = [
     level: "Intermediate",
     years: "2+ Yrs",
     desc: "Lightweight MVC PHP framework development and legacy refactoring.",
-    color: "from-flame-500 to-red-600",
+    color: "from-orange-600 to-red-600",
     bgGlow: "bg-rose-500/10 border-rose-500/20 text-rose-400",
-    icon: <Server className="w-5 h-5 text-rose-400" />,
+    icon: <SiCodeigniter className="w-6 h-6 text-[#EF4223]" />,
   },
   {
     name: "Payment Gateways",
@@ -133,7 +155,7 @@ const skillsData = [
     desc: "Stripe, Stripe Connect, QuickBooks API, M-Pesa mobile money APIs.",
     color: "from-emerald-400 to-cyan-500",
     bgGlow: "bg-teal-500/10 border-teal-500/20 text-teal-400",
-    icon: <ShieldCheck className="w-5 h-5 text-teal-400" />,
+    icon: <SiStripe className="w-6 h-6 text-[#635BFF]" />,
   },
   {
     name: "JavaScript & React",
@@ -143,19 +165,59 @@ const skillsData = [
     desc: "Frontend integration, Next.js, AJAX, Dynamic DOM manipulation.",
     color: "from-yellow-400 to-amber-500",
     bgGlow: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
-    icon: <Code2 className="w-5 h-5 text-yellow-400" />,
+    icon: <SiReact className="w-6 h-6 text-[#61DAFB]" />,
   },
 ];
 
 const devTools = [
-  { name: "PHPStorm", role: "Primary IDE", icon: "🐘" },
-  { name: "VS Code", role: "Code Editor", icon: "⚡" },
-  { name: "Postman", role: "API Testing", icon: "🚀" },
-  { name: "MySQL Workbench", role: "DB Management", icon: "🐬" },
-  { name: "Laragon & XAMPP", role: "Local Servers", icon: "🌐" },
-  { name: "Git & GitHub", role: "Version Control", icon: "🐙" },
-  { name: "Bitbucket", role: "Team Repos", icon: "📦" },
-  { name: "Figma & Trello", role: "Design & Agile", icon: "🎯" },
+  {
+    name: "PHPStorm",
+    role: "Primary JetBrains IDE",
+    icon: <SiPhpstorm className="w-6 h-6 text-[#000000] dark:text-[#FFFFFF]" />,
+    badgeBg: "bg-purple-500/10 border-purple-500/20",
+  },
+  {
+    name: "VS Code",
+    role: "Modern Code Editor",
+    icon: <VscCode className="w-6 h-6 text-[#007ACC]" />,
+    badgeBg: "bg-blue-500/10 border-blue-500/20",
+  },
+  {
+    name: "Postman",
+    role: "REST API Suite",
+    icon: <SiPostman className="w-6 h-6 text-[#FF6C37]" />,
+    badgeBg: "bg-orange-500/10 border-orange-500/20",
+  },
+  {
+    name: "MySQL Workbench",
+    role: "DB Management & SQL",
+    icon: <SiMysql className="w-6 h-6 text-[#4479A1]" />,
+    badgeBg: "bg-cyan-500/10 border-cyan-500/20",
+  },
+  {
+    name: "Laragon & XAMPP",
+    role: "Local PHP Servers",
+    icon: <Server className="w-6 h-6 text-[#5FA04E]" />,
+    badgeBg: "bg-emerald-500/10 border-emerald-500/20",
+  },
+  {
+    name: "Git & GitHub",
+    role: "Version Control",
+    icon: <SiGithub className="w-6 h-6 text-[#181717] dark:text-[#FFFFFF]" />,
+    badgeBg: "bg-stone-500/10 border-stone-500/20",
+  },
+  {
+    name: "Bitbucket",
+    role: "Enterprise Team Repos",
+    icon: <SiBitbucket className="w-6 h-6 text-[#0052CC]" />,
+    badgeBg: "bg-blue-600/10 border-blue-600/20",
+  },
+  {
+    name: "Figma & Trello",
+    role: "Design & Agile Boards",
+    icon: <SiFigma className="w-6 h-6 text-[#F24E1E]" />,
+    badgeBg: "bg-rose-500/10 border-rose-500/20",
+  },
 ];
 
 export default function TechStack() {
@@ -244,7 +306,7 @@ export default function TechStack() {
                 {/* Top: Icon + Level Badge */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`w-11 h-11 rounded-xl border flex items-center justify-center ${skill.bgGlow}`}>
+                    <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${skill.bgGlow} group-hover:scale-110 transition-transform`}>
                       {skill.icon}
                     </div>
                     <div className="flex items-center gap-2">
@@ -297,7 +359,7 @@ export default function TechStack() {
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {devTools.map((tool, idx) => (
               <motion.div
                 key={tool.name}
@@ -305,14 +367,16 @@ export default function TechStack() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.04 }}
-                className="flex items-center gap-3 p-3.5 rounded-xl border border-border/80 bg-muted/40 hover:bg-muted/80 hover:border-primary/30 transition-all group cursor-default"
+                className="flex items-center gap-3.5 p-4 rounded-2xl border border-border/80 bg-muted/40 hover:bg-muted/80 hover:border-primary/30 transition-all group cursor-default"
               >
-                <span className="text-2xl group-hover:scale-110 transition-transform">{tool.icon}</span>
+                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${tool.badgeBg} group-hover:scale-110 transition-transform`}>
+                  {tool.icon}
+                </div>
                 <div>
                   <div className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
                     {tool.name}
                   </div>
-                  <div className="text-xs text-muted-foreground">{tool.role}</div>
+                  <div className="text-xs text-muted-foreground font-medium">{tool.role}</div>
                 </div>
               </motion.div>
             ))}
