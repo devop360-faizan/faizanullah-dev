@@ -44,6 +44,7 @@ export const portfolioData = {
       "MySQL",
       "SQL",
       "PostgreSQL",
+      "Docker",
       "Git",
       "GitHub",
       "Bitbucket",

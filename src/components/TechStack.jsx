@@ -27,6 +27,7 @@ import {
   SiGit,
   SiGithub,
   SiBitbucket,
+  SiDocker,
   SiJavascript,
   SiReact,
   SiPhpstorm,
@@ -128,6 +129,16 @@ const skillsData = [
     icon: <SiPostgresql className="w-6 h-6 text-[#4169E1]" />,
   },
   {
+    name: "Docker & Containers",
+    category: "tools",
+    level: "Advanced",
+    years: "2+ Yrs",
+    desc: "Containerization, Dockerfile configuration, Docker Compose multi-container environments.",
+    color: "from-blue-400 to-sky-600",
+    bgGlow: "bg-sky-500/10 border-sky-500/20 text-sky-400",
+    icon: <SiDocker className="w-6 h-6 text-[#2496ED]" />,
+  },
+  {
     name: "Git & Version Control",
     category: "tools",
     level: "Advanced",
@@ -170,6 +181,12 @@ const skillsData = [
 ];
 
 const devTools = [
+  {
+    name: "Docker & Compose",
+    role: "Container Environment",
+    icon: <SiDocker className="w-6 h-6 text-[#2496ED]" />,
+    badgeBg: "bg-sky-500/10 border-sky-500/20",
+  },
   {
     name: "PHPStorm",
     role: "Primary JetBrains IDE",
