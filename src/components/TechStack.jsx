@@ -1,147 +1,323 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { portfolioData } from "@/data/portfolio";
-import { Zap, TrendingUp, Layers } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Code2,
+  Database,
+  Server,
+  Layers,
+  Wrench,
+  Sparkles,
+  Terminal,
+  Cpu,
+  ShieldCheck,
+  Zap,
+  CheckCircle2,
+} from "lucide-react";
 
-const levelConfig = {
-  expert: {
-    label: "Expert",
-    icon: <Zap className="w-4 h-4" />,
-    color: "text-violet-500",
-    bg: "bg-violet-500/10 border-violet-500/20",
-    dot: "bg-violet-500",
-    bar: "bg-violet-500",
-    width: "100%",
-  },
-  advanced: {
-    label: "Advanced",
-    icon: <TrendingUp className="w-4 h-4" />,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10 border-blue-500/20",
-    dot: "bg-blue-500",
-    bar: "bg-blue-500",
-    width: "80%",
-  },
-  intermediate: {
-    label: "Intermediate",
-    icon: <Layers className="w-4 h-4" />,
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10 border-emerald-500/20",
-    dot: "bg-emerald-500",
-    bar: "bg-emerald-500",
-    width: "60%",
-  },
-};
+const skillCategories = [
+  { id: "all", label: "All Stack" },
+  { id: "backend", label: "Backend & APIs" },
+  { id: "database", label: "Databases & Storage" },
+  { id: "frameworks", label: "Frameworks & Langs" },
+  { id: "tools", label: "DevOps & Tools" },
+];
 
-const tools = [
-  "PHPStorm", "VS Code", "Postman", "MySQL Workbench",
-  "XAMPP", "Laragon", "Figma", "Trello", "Slack", "GitHub", "Bitbucket"
+const skillsData = [
+  {
+    name: "PHP",
+    category: "backend",
+    level: "Expert",
+    years: "3.5+ Yrs",
+    desc: "OOP, MVC patterns, PSR standards, high-performance web scripts.",
+    color: "from-purple-500 to-indigo-600",
+    bgGlow: "bg-purple-500/10 border-purple-500/20 text-purple-400",
+    icon: <Code2 className="w-5 h-5 text-purple-400" />,
+  },
+  {
+    name: "Laravel",
+    category: "frameworks",
+    level: "Expert",
+    years: "3.5+ Yrs",
+    desc: "RESTful APIs, Sanctum Auth, Eloquent ORM, Queues, Multi-Tenancy.",
+    color: "from-red-500 to-orange-600",
+    bgGlow: "bg-red-500/10 border-red-500/20 text-red-400",
+    icon: <Server className="w-5 h-5 text-red-400" />,
+  },
+  {
+    name: "RESTful APIs",
+    category: "backend",
+    level: "Expert",
+    years: "3.5+ Yrs",
+    desc: "Sanctum JWT auth, FCM push notifications, WebSockets, Rate Limiting.",
+    color: "from-cyan-500 to-blue-600",
+    bgGlow: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400",
+    icon: <Zap className="w-5 h-5 text-cyan-400" />,
+  },
+  {
+    name: "MySQL",
+    category: "database",
+    level: "Advanced",
+    years: "3+ Yrs",
+    desc: "Schema design, Indexing optimization, Complex Queries, Transactions.",
+    color: "from-blue-500 to-cyan-600",
+    bgGlow: "bg-blue-500/10 border-blue-500/20 text-blue-400",
+    icon: <Database className="w-5 h-5 text-blue-400" />,
+  },
+  {
+    name: "DB Optimization",
+    category: "database",
+    level: "Expert",
+    years: "3+ Yrs",
+    desc: "Query profiling, Indexing strategies, Caching, Bottleneck elimination.",
+    color: "from-emerald-500 to-teal-600",
+    bgGlow: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+    icon: <Cpu className="w-5 h-5 text-emerald-400" />,
+  },
+  {
+    name: "Node.js & Express",
+    category: "backend",
+    level: "Advanced",
+    years: "2+ Yrs",
+    desc: "Event-driven asynchronous services, REST endpoints, Middleware.",
+    color: "from-green-500 to-emerald-600",
+    bgGlow: "bg-green-500/10 border-green-500/20 text-green-400",
+    icon: <Terminal className="w-5 h-5 text-green-400" />,
+  },
+  {
+    name: "Python Flask",
+    category: "backend",
+    level: "Intermediate",
+    years: "1.5+ Yrs",
+    desc: "AI/NLP integration services, microservice APIs, JSON processing.",
+    color: "from-amber-500 to-yellow-600",
+    bgGlow: "bg-amber-500/10 border-amber-500/20 text-amber-400",
+    icon: <Code2 className="w-5 h-5 text-amber-400" />,
+  },
+  {
+    name: "PostgreSQL",
+    category: "database",
+    level: "Advanced",
+    years: "2+ Yrs",
+    desc: "Relational data modeling, JSONB fields, Triggers, Views.",
+    color: "from-indigo-500 to-blue-700",
+    bgGlow: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400",
+    icon: <Database className="w-5 h-5 text-indigo-400" />,
+  },
+  {
+    name: "Git & Version Control",
+    category: "tools",
+    level: "Advanced",
+    years: "3.5+ Yrs",
+    desc: "GitHub, Bitbucket, Branching strategies, PR code reviews, Merge resolution.",
+    color: "from-orange-500 to-rose-600",
+    bgGlow: "bg-orange-500/10 border-orange-500/20 text-orange-400",
+    icon: <Layers className="w-5 h-5 text-orange-400" />,
+  },
+  {
+    name: "CodeIgniter",
+    category: "frameworks",
+    level: "Intermediate",
+    years: "2+ Yrs",
+    desc: "Lightweight MVC PHP framework development and legacy refactoring.",
+    color: "from-flame-500 to-red-600",
+    bgGlow: "bg-rose-500/10 border-rose-500/20 text-rose-400",
+    icon: <Server className="w-5 h-5 text-rose-400" />,
+  },
+  {
+    name: "Payment Gateways",
+    category: "backend",
+    level: "Advanced",
+    years: "2.5+ Yrs",
+    desc: "Stripe, Stripe Connect, QuickBooks API, M-Pesa mobile money APIs.",
+    color: "from-emerald-400 to-cyan-500",
+    bgGlow: "bg-teal-500/10 border-teal-500/20 text-teal-400",
+    icon: <ShieldCheck className="w-5 h-5 text-teal-400" />,
+  },
+  {
+    name: "JavaScript & React",
+    category: "frameworks",
+    level: "Intermediate",
+    years: "2+ Yrs",
+    desc: "Frontend integration, Next.js, AJAX, Dynamic DOM manipulation.",
+    color: "from-yellow-400 to-amber-500",
+    bgGlow: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
+    icon: <Code2 className="w-5 h-5 text-yellow-400" />,
+  },
+];
+
+const devTools = [
+  { name: "PHPStorm", role: "Primary IDE", icon: "🐘" },
+  { name: "VS Code", role: "Code Editor", icon: "⚡" },
+  { name: "Postman", role: "API Testing", icon: "🚀" },
+  { name: "MySQL Workbench", role: "DB Management", icon: "🐬" },
+  { name: "Laragon & XAMPP", role: "Local Servers", icon: "🌐" },
+  { name: "Git & GitHub", role: "Version Control", icon: "🐙" },
+  { name: "Bitbucket", role: "Team Repos", icon: "📦" },
+  { name: "Figma & Trello", role: "Design & Agile", icon: "🎯" },
 ];
 
 export default function TechStack() {
-  const { skills } = portfolioData;
+  const [activeTab, setActiveTab] = useState("all");
+  const [selectedSkill, setSelectedSkill] = useState(null);
+
+  const filteredSkills =
+    activeTab === "all"
+      ? skillsData
+      : skillsData.filter((s) => s.category === activeTab);
 
   return (
-    <section id="skills" className="py-28 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="skills" className="py-28 px-6 bg-muted/30 relative overflow-hidden">
+      {/* Glow Effects */}
+      <div className="absolute top-1/3 left-0 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-0 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
+      <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
-          <p className="text-primary text-sm font-bold uppercase tracking-widest mb-3">Tech Stack</p>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
-            What I work with
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-xl">
-            Technologies I&apos;ve mastered over years of building production-grade systems.
-          </p>
-        </motion.div>
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-widest mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              Technical Competencies
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
+              Tech Stack & Architecture
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-xl">
+              Battle-tested technologies and frameworks used to architect scalable, high-availability backend solutions.
+            </p>
+          </div>
 
-        {/* Skills grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-          {(["expert", "advanced", "intermediate"]).map((level, groupIdx) => {
-            const cfg = levelConfig[level];
-            return (
-              <motion.div
-                key={level}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: groupIdx * 0.1 }}
-                className="rounded-2xl border border-border bg-card p-6 flex flex-col gap-4"
-              >
-                {/* Level Header */}
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={`w-8 h-8 rounded-lg ${cfg.bg} border flex items-center justify-center ${cfg.color}`}>
-                    {cfg.icon}
-                  </div>
-                  <div>
-                    <div className={`text-sm font-bold ${cfg.color}`}>{cfg.label}</div>
-                    <div className="text-xs text-muted-foreground">{skills[level].length} technologies</div>
-                  </div>
-                </div>
-
-                {/* Skill items with progress bar */}
-                <div className="flex flex-col gap-3">
-                  {skills[level].map((skill, idx) => (
-                    <motion.div
-                      key={skill}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: groupIdx * 0.1 + idx * 0.04 }}
-                    >
-                      <div className="flex items-center justify-between text-sm mb-1.5">
-                        <span className="font-medium text-foreground">{skill}</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <motion.div
-                          className={`h-full rounded-full ${cfg.bar}`}
-                          initial={{ width: 0 }}
-                          whileInView={{ width: cfg.width }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.8, delay: groupIdx * 0.1 + idx * 0.04, ease: "easeOut" }}
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Tools Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="rounded-2xl border border-border bg-card p-6"
-        >
-          <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-5">
-            Tools & Software
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {tools.map((tool, idx) => (
-              <motion.span
-                key={tool}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05 }}
-                className="px-4 py-2 rounded-xl border border-border bg-muted/50 text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all cursor-default"
-              >
-                {tool}
-              </motion.span>
-            ))}
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-xs font-semibold text-muted-foreground self-start md:self-end">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            12+ Production Technologies
           </div>
         </motion.div>
 
+        {/* Category Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none"
+        >
+          {skillCategories.map((cat) => {
+            const isActive = activeTab === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 border ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25 scale-105"
+                    : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
+        </motion.div>
+
+        {/* Interactive Skills Grid */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+          <AnimatePresence mode="popLayout">
+            {filteredSkills.map((skill, idx) => (
+              <motion.div
+                layout
+                key={skill.name}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ duration: 0.3, delay: idx * 0.04 }}
+                onClick={() => setSelectedSkill(selectedSkill === skill.name ? null : skill.name)}
+                className={`group relative rounded-2xl border p-6 bg-card hover:border-primary/40 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden ${
+                  selectedSkill === skill.name ? "ring-2 ring-primary border-primary" : "border-border"
+                }`}
+              >
+                {/* Top: Icon + Level Badge */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-11 h-11 rounded-xl border flex items-center justify-center ${skill.bgGlow}`}>
+                      {skill.icon}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-muted font-bold border border-border text-muted-foreground">
+                        {skill.years}
+                      </span>
+                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold border ${skill.bgGlow}`}>
+                        {skill.level}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Title & Desc */}
+                  <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {skill.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                    {skill.desc}
+                  </p>
+                </div>
+
+                {/* Bottom Bar: Dynamic Progress Indicator */}
+                <div className="pt-3 border-t border-border/60 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
+                    Production Proven
+                  </span>
+                  <div className="w-20 h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div className={`h-full bg-gradient-to-r ${skill.color} rounded-full`} />
+                  </div>
+                </div>
+
+                {/* Subtle Hover Gradient */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Tools & Workflow Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-3xl border border-border bg-card p-8 shadow-sm"
+        >
+          <div className="flex items-center gap-2 mb-6">
+            <Wrench className="w-5 h-5 text-primary" />
+            <h3 className="text-xl font-bold text-foreground">
+              Development Environment & Workflow Tools
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {devTools.map((tool, idx) => (
+              <motion.div
+                key={tool.name}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.04 }}
+                className="flex items-center gap-3 p-3.5 rounded-xl border border-border/80 bg-muted/40 hover:bg-muted/80 hover:border-primary/30 transition-all group cursor-default"
+              >
+                <span className="text-2xl group-hover:scale-110 transition-transform">{tool.icon}</span>
+                <div>
+                  <div className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                    {tool.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{tool.role}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

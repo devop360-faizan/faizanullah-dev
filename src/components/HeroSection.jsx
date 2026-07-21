@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { portfolioData } from "@/data/portfolio";
 import { ArrowDown, Link2, ExternalLink, Mail, Download } from "lucide-react";
+import { getYearsOfExperience } from "@/lib/utils";
 
 export default function HeroSection() {
   const { profile } = portfolioData;
@@ -195,7 +196,7 @@ export default function HeroSection() {
               transition={{ delay: 1.1, type: "spring" }}
               className="absolute top-6 -right-4 md:-right-10 flex flex-col items-center px-4 py-3 rounded-2xl bg-card border border-border shadow-lg"
             >
-              <span className="text-2xl font-black text-primary">3+</span>
+              <span className="text-2xl font-black text-primary">{getYearsOfExperience()}</span>
               <span className="text-xs text-muted-foreground font-medium">Yrs Exp</span>
             </motion.div>
 
@@ -206,7 +207,7 @@ export default function HeroSection() {
               transition={{ delay: 1.2, type: "spring" }}
               className="absolute top-6 -left-4 md:-left-10 flex flex-col items-center px-4 py-3 rounded-2xl bg-card border border-border shadow-lg"
             >
-              <span className="text-2xl font-black text-primary">20+</span>
+              <span className="text-2xl font-black text-primary">25+</span>
               <span className="text-xs text-muted-foreground font-medium">Projects</span>
             </motion.div>
           </div>
