@@ -138,7 +138,7 @@ export default async function Image() {
               color: "#38bdf8",
             }}
           >
-            faizanullahtech.com
+            faizanullah-dev.vercel.app
           </span>
         </div>
       </div>

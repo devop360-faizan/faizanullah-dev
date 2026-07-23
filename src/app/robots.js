@@ -1,5 +1,5 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://faizanullahtech.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://faizanullah-dev.vercel.app";
 
   return {
     rules: {

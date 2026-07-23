@@ -9,7 +9,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://faizanullahtech.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://faizanullah-dev.vercel.app";
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
