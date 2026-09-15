@@ -1,19 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Sparkles,
-  Wrench,
-  Zap,
-  CheckCircle2,
-  Cpu,
-  Layers,
-  Terminal,
-  ShieldCheck,
-  Server,
-  Globe,
-} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Server, Database, CreditCard, Boxes, Wrench } from "lucide-react";
 
 import {
   SiPhp,
@@ -28,377 +16,303 @@ import {
   SiGithub,
   SiBitbucket,
   SiDocker,
-  SiJavascript,
   SiReact,
   SiPhpstorm,
   SiPostman,
   SiFigma,
-  SiTrello,
   SiStripe,
 } from "react-icons/si";
 
 import { VscCode } from "react-icons/vsc";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Reveal from "@/components/ui/Reveal";
 
-const skillCategories = [
-  { id: "all", label: "All Stack" },
-  { id: "backend", label: "Backend & APIs" },
-  { id: "database", label: "Databases & Storage" },
-  { id: "frameworks", label: "Frameworks & Langs" },
-  { id: "tools", label: "DevOps & Tools" },
-];
-
-const skillsData = [
+const skills = [
   {
     name: "PHP",
-    category: "backend",
     level: "Expert",
-    years: "3.5+ Yrs",
-    desc: "OOP, MVC patterns, PSR standards, high-performance web scripts.",
-    color: "from-purple-500 to-indigo-600",
-    bgGlow: "bg-purple-500/10 border-purple-500/20 text-purple-400",
-    icon: <SiPhp className="w-6 h-6 text-[#777BB4]" />,
+    years: "3.5+ yrs",
+    desc: "OOP, MVC, PSR standards, high-performance web scripts",
+    icon: <SiPhp className="h-5 w-5 text-[#777BB4]" />,
   },
   {
     name: "Laravel",
-    category: "frameworks",
     level: "Expert",
-    years: "3.5+ Yrs",
-    desc: "RESTful APIs, Sanctum Auth, Eloquent ORM, Queues, Multi-Tenancy.",
-    color: "from-red-500 to-orange-600",
-    bgGlow: "bg-red-500/10 border-red-500/20 text-red-400",
-    icon: <SiLaravel className="w-6 h-6 text-[#FF2D20]" />,
+    years: "3.5+ yrs",
+    desc: "REST APIs, Sanctum auth, Eloquent ORM, queues, multi-tenancy",
+    icon: <SiLaravel className="h-5 w-5 text-[#FF2D20]" />,
   },
   {
     name: "RESTful APIs",
-    category: "backend",
     level: "Expert",
-    years: "3.5+ Yrs",
-    desc: "Sanctum JWT auth, FCM push notifications, WebSockets, Rate Limiting.",
-    color: "from-cyan-500 to-blue-600",
-    bgGlow: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400",
-    icon: <Zap className="w-6 h-6 text-cyan-400" />,
-  },
-  {
-    name: "MySQL",
-    category: "database",
-    level: "Advanced",
-    years: "3+ Yrs",
-    desc: "Schema design, Indexing optimization, Complex Queries, Transactions.",
-    color: "from-blue-500 to-cyan-600",
-    bgGlow: "bg-blue-500/10 border-blue-500/20 text-blue-400",
-    icon: <SiMysql className="w-6 h-6 text-[#4479A1]" />,
-  },
-  {
-    name: "DB Optimization",
-    category: "database",
-    level: "Expert",
-    years: "3+ Yrs",
-    desc: "Query profiling, Indexing strategies, Caching, Bottleneck elimination.",
-    color: "from-emerald-500 to-teal-600",
-    bgGlow: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
-    icon: <Cpu className="w-6 h-6 text-emerald-400" />,
+    years: "3.5+ yrs",
+    desc: "Sanctum/JWT auth, FCM push, WebSockets, rate limiting",
+    icon: <SiPostman className="h-5 w-5 text-[#FF6C37]" />,
   },
   {
     name: "Node.js & Express",
-    category: "backend",
     level: "Advanced",
-    years: "2+ Yrs",
-    desc: "Event-driven asynchronous services, REST endpoints, Middleware.",
-    color: "from-green-500 to-emerald-600",
-    bgGlow: "bg-green-500/10 border-green-500/20 text-green-400",
-    icon: <SiNodedotjs className="w-6 h-6 text-[#5FA04E]" />,
+    years: "2+ yrs",
+    desc: "Event-driven async services, REST endpoints, middleware",
+    icon: <SiNodedotjs className="h-5 w-5 text-[#5FA04E]" />,
   },
   {
     name: "Python Flask",
-    category: "backend",
     level: "Intermediate",
-    years: "1.5+ Yrs",
-    desc: "AI/NLP integration services, microservice APIs, JSON processing.",
-    color: "from-amber-500 to-yellow-600",
-    bgGlow: "bg-amber-500/10 border-amber-500/20 text-amber-400",
-    icon: <SiPython className="w-6 h-6 text-[#3776AB]" />,
-  },
-  {
-    name: "PostgreSQL",
-    category: "database",
-    level: "Advanced",
-    years: "2+ Yrs",
-    desc: "Relational data modeling, JSONB fields, Triggers, Views.",
-    color: "from-indigo-500 to-blue-700",
-    bgGlow: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400",
-    icon: <SiPostgresql className="w-6 h-6 text-[#4169E1]" />,
-  },
-  {
-    name: "Docker & Containers",
-    category: "tools",
-    level: "Advanced",
-    years: "2+ Yrs",
-    desc: "Containerization, Dockerfile configuration, Docker Compose multi-container environments.",
-    color: "from-blue-400 to-sky-600",
-    bgGlow: "bg-sky-500/10 border-sky-500/20 text-sky-400",
-    icon: <SiDocker className="w-6 h-6 text-[#2496ED]" />,
-  },
-  {
-    name: "Git & Version Control",
-    category: "tools",
-    level: "Advanced",
-    years: "3.5+ Yrs",
-    desc: "GitHub, Bitbucket, Branching strategies, PR code reviews, Merge resolution.",
-    color: "from-orange-500 to-rose-600",
-    bgGlow: "bg-orange-500/10 border-orange-500/20 text-orange-400",
-    icon: <SiGit className="w-6 h-6 text-[#F05032]" />,
+    years: "1.5+ yrs",
+    desc: "AI/NLP service integration, microservice APIs, JSON processing",
+    icon: <SiPython className="h-5 w-5 text-[#3776AB]" />,
   },
   {
     name: "CodeIgniter",
-    category: "frameworks",
     level: "Intermediate",
-    years: "2+ Yrs",
-    desc: "Lightweight MVC PHP framework development and legacy refactoring.",
-    color: "from-orange-600 to-red-600",
-    bgGlow: "bg-rose-500/10 border-rose-500/20 text-rose-400",
-    icon: <SiCodeigniter className="w-6 h-6 text-[#EF4223]" />,
+    years: "2+ yrs",
+    desc: "Lightweight MVC development and legacy refactoring",
+    icon: <SiCodeigniter className="h-5 w-5 text-[#EF4223]" />,
   },
+];
+
+const dataSkills = [
+  {
+    name: "MySQL",
+    level: "Advanced",
+    years: "3+ yrs",
+    desc: "Schema design, indexing, complex queries, transactions",
+    icon: <SiMysql className="h-5 w-5 text-[#4479A1]" />,
+  },
+  {
+    name: "PostgreSQL",
+    level: "Advanced",
+    years: "2+ yrs",
+    desc: "Relational modeling, JSONB, triggers, views",
+    icon: <SiPostgresql className="h-5 w-5 text-[#4169E1]" />,
+  },
+  {
+    name: "DB Optimization",
+    level: "Expert",
+    years: "3+ yrs",
+    desc: "Query profiling, indexing strategies, caching, bottlenecks",
+    icon: <Database className="h-5 w-5 text-primary" />,
+  },
+];
+
+const integrationSkills = [
   {
     name: "Payment Gateways",
-    category: "backend",
     level: "Advanced",
-    years: "2.5+ Yrs",
-    desc: "Stripe, Stripe Connect, QuickBooks API, M-Pesa mobile money APIs.",
-    color: "from-emerald-400 to-cyan-500",
-    bgGlow: "bg-teal-500/10 border-teal-500/20 text-teal-400",
-    icon: <SiStripe className="w-6 h-6 text-[#635BFF]" />,
+    years: "2.5+ yrs",
+    desc: "Stripe, Stripe Connect, QuickBooks API, M-Pesa mobile money",
+    icon: <SiStripe className="h-5 w-5 text-[#635BFF]" />,
+  },
+];
+
+const devopsSkills = [
+  {
+    name: "Docker & Containers",
+    level: "Advanced",
+    years: "2+ yrs",
+    desc: "Containerization, Dockerfiles, Compose orchestration",
+    icon: <SiDocker className="h-5 w-5 text-[#2496ED]" />,
   },
   {
-    name: "JavaScript & React",
-    category: "frameworks",
-    level: "Intermediate",
-    years: "2+ Yrs",
-    desc: "Frontend integration, Next.js, AJAX, Dynamic DOM manipulation.",
-    color: "from-yellow-400 to-amber-500",
-    bgGlow: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
-    icon: <SiReact className="w-6 h-6 text-[#61DAFB]" />,
+    name: "Git & Version Control",
+    level: "Advanced",
+    years: "3.5+ yrs",
+    desc: "GitHub, Bitbucket, branching strategies, PR reviews",
+    icon: <SiGit className="h-5 w-5 text-[#F05032]" />,
+  },
+];
+
+const groups = [
+  {
+    title: "Backend & APIs",
+    subtitle: "The core of what I build",
+    icon: <Server className="h-5 w-5 text-primary" />,
+    items: skills,
+  },
+  {
+    title: "Data & Storage",
+    subtitle: "Schema, queries, performance",
+    icon: <Database className="h-5 w-5 text-primary" />,
+    items: dataSkills,
+  },
+  {
+    title: "Payments & Integrations",
+    subtitle: "Money movement done right",
+    icon: <CreditCard className="h-5 w-5 text-primary" />,
+    items: integrationSkills,
+  },
+  {
+    title: "DevOps & Tooling",
+    subtitle: "Ship and run reliably",
+    icon: <Boxes className="h-5 w-5 text-primary" />,
+    items: devopsSkills,
   },
 ];
 
 const devTools = [
   {
     name: "Docker & Compose",
-    role: "Container Environment",
-    icon: <SiDocker className="w-6 h-6 text-[#2496ED]" />,
-    badgeBg: "bg-sky-500/10 border-sky-500/20",
+    role: "Container environment",
+    icon: <SiDocker className="h-5 w-5 text-[#2496ED]" />,
   },
   {
     name: "PHPStorm",
     role: "Primary JetBrains IDE",
-    icon: <SiPhpstorm className="w-6 h-6 text-[#000000] dark:text-[#FFFFFF]" />,
-    badgeBg: "bg-purple-500/10 border-purple-500/20",
+    icon: <SiPhpstorm className="h-5 w-5 text-[#000000] dark:text-[#FFFFFF]" />,
   },
   {
     name: "VS Code",
-    role: "Modern Code Editor",
-    icon: <VscCode className="w-6 h-6 text-[#007ACC]" />,
-    badgeBg: "bg-blue-500/10 border-blue-500/20",
+    role: "Modern code editor",
+    icon: <VscCode className="h-5 w-5 text-[#007ACC]" />,
   },
   {
     name: "Postman",
-    role: "REST API Suite",
-    icon: <SiPostman className="w-6 h-6 text-[#FF6C37]" />,
-    badgeBg: "bg-orange-500/10 border-orange-500/20",
+    role: "REST API suite",
+    icon: <SiPostman className="h-5 w-5 text-[#FF6C37]" />,
   },
   {
     name: "MySQL Workbench",
-    role: "DB Management & SQL",
-    icon: <SiMysql className="w-6 h-6 text-[#4479A1]" />,
-    badgeBg: "bg-cyan-500/10 border-cyan-500/20",
-  },
-  {
-    name: "Laragon & XAMPP",
-    role: "Local PHP Servers",
-    icon: <Server className="w-6 h-6 text-[#5FA04E]" />,
-    badgeBg: "bg-emerald-500/10 border-emerald-500/20",
+    role: "DB management & SQL",
+    icon: <SiMysql className="h-5 w-5 text-[#4479A1]" />,
   },
   {
     name: "Git & GitHub",
-    role: "Version Control",
-    icon: <SiGithub className="w-6 h-6 text-[#181717] dark:text-[#FFFFFF]" />,
-    badgeBg: "bg-stone-500/10 border-stone-500/20",
+    role: "Version control",
+    icon: <SiGithub className="h-5 w-5 text-[#181717] dark:text-[#FFFFFF]" />,
   },
   {
     name: "Bitbucket",
-    role: "Enterprise Team Repos",
-    icon: <SiBitbucket className="w-6 h-6 text-[#0052CC]" />,
-    badgeBg: "bg-blue-600/10 border-blue-600/20",
+    role: "Enterprise team repos",
+    icon: <SiBitbucket className="h-5 w-5 text-[#0052CC]" />,
   },
   {
     name: "Figma & Trello",
-    role: "Design & Agile Boards",
-    icon: <SiFigma className="w-6 h-6 text-[#F24E1E]" />,
-    badgeBg: "bg-rose-500/10 border-rose-500/20",
+    role: "Design & agile boards",
+    icon: <SiFigma className="h-5 w-5 text-[#F24E1E]" />,
   },
 ];
 
-export default function TechStack() {
-  const [activeTab, setActiveTab] = useState("all");
-  const [selectedSkill, setSelectedSkill] = useState(null);
+function SkillRow({ skill, index }) {
+  return (
+    <Reveal delay={index * 0.04} y={14}>
+      <div className="group flex w-full items-start gap-3.5 rounded-xl px-3 py-3 transition-colors duration-200 hover:bg-muted/60">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-muted">
+          {skill.icon}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold text-foreground">{skill.name}</h3>
+            <span className="rounded-md border border-border bg-card px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {skill.level}
+            </span>
+          </div>
+          <p className="mt-0.5 text-[13px] leading-snug text-muted-foreground">
+            {skill.desc}
+          </p>
+        </div>
+        <span className="hidden shrink-0 text-[11px] font-medium text-muted-foreground/70 sm:block">
+          {skill.years}
+        </span>
+      </div>
+    </Reveal>
+  );
+}
 
-  const filteredSkills =
-    activeTab === "all"
-      ? skillsData
-      : skillsData.filter((s) => s.category === activeTab);
+export default function TechStack() {
+  const reduce = useReducedMotion();
 
   return (
-    <section id="skills" className="py-28 px-6 bg-muted/30 relative overflow-hidden">
-      {/* Glow Effects */}
-      <div className="absolute top-1/3 left-0 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-0 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+    <section
+      id="skills"
+      className="relative scroll-mt-20 px-5 py-24 sm:px-8 md:py-32"
+    >
+      {/* Background accents */}
+      <div className="pointer-events-none absolute left-0 top-1/3 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-10 right-0 -z-10 h-80 w-80 rounded-full bg-accent/5 blur-[120px]" />
 
-      <div className="max-w-6xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
-        >
-          <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary uppercase tracking-widest mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              Technical Competencies
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
-              Tech Stack & Architecture
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-xl">
-              Battle-tested technologies and frameworks used to architect scalable, high-availability backend solutions.
-            </p>
-          </div>
+      <div className="mx-auto max-w-6xl">
+        <SectionHeading
+          index="02"
+          eyebrow="Skills"
+          title="A focused, production-proven toolkit."
+          description="Technologies I use to architect and ship scalable backend systems — grouped by how they work together in real projects."
+        />
 
-          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border text-xs font-semibold text-muted-foreground self-start md:self-end">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            12+ Production Technologies
-          </div>
-        </motion.div>
-
-        {/* Category Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none"
-        >
-          {skillCategories.map((cat) => {
-            const isActive = activeTab === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveTab(cat.id)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 border ${
-                  isActive
-                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25 scale-105"
-                    : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
-        </motion.div>
-
-        {/* Interactive Skills Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
-          <AnimatePresence mode="popLayout">
-            {filteredSkills.map((skill, idx) => (
+        {/* Group cards */}
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          {groups.map((group, i) => (
+            <Reveal key={group.title} delay={i * 0.08}>
               <motion.div
-                layout
-                key={skill.name}
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                transition={{ duration: 0.3, delay: idx * 0.04 }}
-                onClick={() => setSelectedSkill(selectedSkill === skill.name ? null : skill.name)}
-                className={`group relative rounded-2xl border p-6 bg-card hover:border-primary/40 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden ${
-                  selectedSkill === skill.name ? "ring-2 ring-primary border-primary" : "border-border"
-                }`}
+                className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] transition-all duration-300 hover:border-primary/30 hover:shadow-[var(--shadow-md)] sm:p-6"
+                whileHover={reduce ? undefined : { y: -4 }}
               >
-                {/* Top: Icon + Level Badge */}
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${skill.bgGlow} group-hover:scale-110 transition-transform`}>
-                      {skill.icon}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-muted font-bold border border-border text-muted-foreground">
-                        {skill.years}
-                      </span>
-                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold border ${skill.bgGlow}`}>
-                        {skill.level}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Title & Desc */}
-                  <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {skill.name}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                    {skill.desc}
-                  </p>
-                </div>
-
-                {/* Bottom Bar: Dynamic Progress Indicator */}
-                <div className="pt-3 border-t border-border/60 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                    Production Proven
+                <div className="mb-3 flex items-center gap-3 border-b border-border/70 pb-4">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    {group.icon}
                   </span>
-                  <div className="w-20 h-1.5 rounded-full bg-muted overflow-hidden">
-                    <div className={`h-full bg-gradient-to-r ${skill.color} rounded-full`} />
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground">
+                      {group.title}
+                    </h3>
+                    <p className="text-[13px] text-muted-foreground">
+                      {group.subtitle}
+                    </p>
                   </div>
                 </div>
-
-                {/* Subtle Hover Gradient */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Tools & Workflow Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="rounded-3xl border border-border bg-card p-8 shadow-sm"
-        >
-          <div className="flex items-center gap-2 mb-6">
-            <Wrench className="w-5 h-5 text-primary" />
-            <h3 className="text-xl font-bold text-foreground">
-              Development Environment & Workflow Tools
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {devTools.map((tool, idx) => (
-              <motion.div
-                key={tool.name}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.04 }}
-                className="flex items-center gap-3.5 p-4 rounded-2xl border border-border/80 bg-muted/40 hover:bg-muted/80 hover:border-primary/30 transition-all group cursor-default"
-              >
-                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${tool.badgeBg} group-hover:scale-110 transition-transform`}>
-                  {tool.icon}
+                <div className="flex flex-col gap-1">
+                  {group.items.map((skill, j) => (
+                    <SkillRow key={skill.name} skill={skill} index={j} />
+                  ))}
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
-                    {tool.name}
+              </motion.div>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Workflow tools */}
+        <Reveal delay={0.1} className="mt-10">
+          <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-xs)] sm:p-8">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Wrench className="h-5 w-5" />
+              </span>
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Development environment & workflow
+                </h3>
+                <p className="text-[13px] text-muted-foreground">
+                  The tools I use every day to move from idea to production
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {devTools.map((tool, idx) => (
+                <motion.div
+                  key={tool.name}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.04, duration: 0.5 }}
+                  className="flex items-center gap-3 rounded-xl border border-border/80 bg-muted/40 p-3.5 transition-all duration-300 hover:border-primary/30 hover:bg-muted/70"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card">
+                    {tool.icon}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="truncate text-[13px] font-semibold text-foreground">
+                      {tool.name}
+                    </div>
+                    <div className="truncate text-[11px] text-muted-foreground">
+                      {tool.role}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground font-medium">{tool.role}</div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );
