@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  Network,
+  Server,
   Database,
   Building2,
   CreditCard,
@@ -11,48 +11,18 @@ import {
   MapPin,
   Globe2,
   GraduationCap,
+  Code2,
 } from "lucide-react";
 import { getYearsOfExperience } from "@/lib/utils";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 
 const focusAreas = [
-  {
-    icon: <Network className="h-5 w-5" />,
-    title: "Scalable REST APIs",
-    desc: "Sanctum & JWT auth, rate limiting, WebSockets, and FCM push — API contracts that stay reliable under real load.",
-  },
-  {
-    icon: <Database className="h-5 w-5" />,
-    title: "Database performance",
-    desc: "MySQL & PostgreSQL schema design, indexing strategies, query profiling, and caching to cut bottlenecks.",
-  },
-  {
-    icon: <Building2 className="h-5 w-5" />,
-    title: "SaaS & multi-tenant platforms",
-    desc: "Enterprise CRMs, marketplaces, booking engines, and portals built with Laravel multi-tenancy.",
-  },
-  {
-    icon: <CreditCard className="h-5 w-5" />,
-    title: "Payments & integrations",
-    desc: "Stripe, Stripe Connect, M-Pesa, QuickBooks, and CRM integrations wired into production workflows.",
-  },
-  {
-    icon: <Smartphone className="h-5 w-5" />,
-    title: "Mobile backends",
-    desc: "9 production APIs powering hotel booking, attendance, ride-hailing, logistics, e-commerce, and HR apps.",
-  },
-  {
-    icon: <Sparkles className="h-5 w-5" />,
-    title: "AI & automation",
-    desc: "Python Flask microservices integrating AI/NLP workflows into existing systems.",
-  },
-];
-
-const quickFacts = [
-  { icon: <MapPin className="h-4 w-4" />, label: "Based in Karachi, Pakistan" },
-  { icon: <Globe2 className="h-4 w-4" />, label: "Remote across time zones" },
-  { icon: <GraduationCap className="h-4 w-4" />, label: "BS Computer Science (in progress)" },
+  { icon: <Server className="h-5 w-5" />, title: "Scalable REST APIs", desc: "Sanctum & JWT auth, rate limiting, WebSockets, and FCM push notifications." },
+  { icon: <Database className="h-5 w-5" />, title: "Database Optimization", desc: "MySQL & PostgreSQL schema design, indexing strategies, query profiling." },
+  { icon: <Building2 className="h-5 w-5" />, title: "SaaS & Multi-Tenant", desc: "Enterprise CRMs, marketplaces, booking engines with tenant isolation." },
+  { icon: <CreditCard className="h-5 w-5" />, title: "Payment Integrations", desc: "Stripe Connect, M-Pesa, QuickBooks wired into production workflows." },
+  { icon: <Smartphone className="h-5 w-5" />, title: "Mobile Backends", desc: "9 production APIs powering hotel, ride-hailing, logistics & HR apps." },
+  { icon: <Sparkles className="h-5 w-5" />, title: "AI & Automation", desc: "Python Flask microservices integrating AI/NLP into business systems." },
 ];
 
 export default function AboutSection() {
@@ -61,86 +31,97 @@ export default function AboutSection() {
 
   return (
     <section id="about" className="relative scroll-mt-20 px-5 py-24 sm:px-8 md:py-32">
-      <div className="pointer-events-none absolute right-0 top-1/4 -z-10 h-96 w-96 rounded-full bg-primary/6 blur-[130px]" />
+      <div className="pointer-events-none absolute right-0 top-1/4 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-[140px]" />
 
       <div className="mx-auto max-w-6xl">
-        <div className="max-w-2xl">
-          <SectionHeading
-            index="01"
-            eyebrow="About"
-            title={
-              <>
-                The quiet engine behind{" "}
-                <span className="font-serif-accent text-gradient">great products.</span>
-              </>
-            }
-          />
-        </div>
+        {/* Eyebrow */}
+        <Reveal>
+          <div className="flex items-center gap-3 text-primary">
+            <span className="h-px w-8 bg-primary/50" />
+            <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">01 / About</span>
+          </div>
+        </Reveal>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-          {/* Story */}
-          <div className="flex flex-col gap-5">
-            <Reveal>
-              <p className="text-base leading-relaxed text-foreground/90">
-                I&apos;m Faizan Ullah — a backend engineer who focuses on the
-                server-side of products people use every day. Over the past{" "}
+        {/* Bento grid */}
+        <div className="mt-8 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {/* Profile card - spans 2 cols */}
+          <Reveal delay={0.05} className="md:col-span-2 lg:col-span-2">
+            <div className="neon-border flex h-full flex-col gap-5 rounded-3xl bg-card p-7">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                  The engine behind{" "}
+                  <span className="text-gradient font-serif-accent">great products.</span>
+                </h2>
+              </div>
+              <p className="text-base leading-relaxed text-muted-foreground">
+                I&apos;m Faizan Ullah — a backend engineer who builds the
+                server-side of products people rely on daily. Over{" "}
                 <strong className="font-semibold text-foreground">{years}+ years</strong>{" "}
-                I&apos;ve worked across agencies and international teams to ship
-                production systems: e-commerce marketplaces, booking and logistics
-                platforms, enterprise CRMs, and SaaS products.
+                I&apos;ve shipped e-commerce platforms, booking engines,
+                enterprise CRMs, and SaaS products across international teams.
               </p>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <p className="text-base leading-relaxed text-muted-foreground">
-                I&apos;ve also architected the backend APIs behind 9 mobile
-                applications — hotel booking, attendance, ride-hailing, logistics,
-                e-commerce, and HR — and integrated payment gateways like Stripe,
-                M-Pesa, and QuickBooks into real business workflows.
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                I value reliability: clean API contracts, optimized queries,
+                thoughtful auth, and integrations that don&apos;t surprise you
+                in production.
               </p>
-            </Reveal>
-            <Reveal delay={0.16}>
-              <p className="text-base leading-relaxed text-muted-foreground">
-                What I value is reliability: clean API contracts, optimized
-                queries, thoughtful authentication, and integrations that don&apos;t
-                surprise you in production. I&apos;d rather ship something
-                dependable and well-architected than clever and fragile.
-              </p>
-            </Reveal>
-
-            {/* Quick facts */}
-            <Reveal delay={0.2} className="mt-4">
-              <div className="flex flex-wrap gap-2.5">
-                {quickFacts.map((f) => (
-                  <span
-                    key={f.label}
-                    className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground"
-                  >
+              <div className="mt-auto flex flex-wrap gap-2">
+                {[
+                  { icon: <MapPin className="h-3.5 w-3.5" />, label: "Karachi, Pakistan" },
+                  { icon: <Globe2 className="h-3.5 w-3.5" />, label: "Remote-ready" },
+                  { icon: <GraduationCap className="h-3.5 w-3.5" />, label: "BS CS (in progress)" },
+                ].map((f) => (
+                  <span key={f.label} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground">
                     <span className="text-primary">{f.icon}</span>
                     {f.label}
                   </span>
                 ))}
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
 
-          {/* Focus areas */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {focusAreas.map((area, i) => (
-              <Reveal key={area.title} delay={i * 0.06}>
-                <div className="group flex h-full flex-col gap-3 rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-md)]">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-muted text-primary transition-colors duration-300 group-hover:border-primary/30 group-hover:bg-primary/10">
-                    {area.icon}
-                  </span>
-                  <h3 className="text-[15px] font-semibold text-foreground">
-                    {area.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {area.desc}
-                  </p>
+          {/* Stats column */}
+          <Reveal delay={0.1} className="flex flex-col gap-4">
+            <div className="neon-border flex-1 rounded-3xl bg-card p-6">
+              <span className="font-mono text-4xl font-bold text-primary">{years}+</span>
+              <p className="mt-1 text-sm text-muted-foreground">Years in production</p>
+            </div>
+            <div className="neon-border flex-1 rounded-3xl bg-card p-6">
+              <span className="font-mono text-4xl font-bold text-accent">26</span>
+              <p className="mt-1 text-sm text-muted-foreground">Projects shipped</p>
+            </div>
+          </Reveal>
+
+          {/* Code philosophy card */}
+          <Reveal delay={0.15}>
+            <div className="neon-border flex h-full flex-col gap-4 rounded-3xl bg-card p-6">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Code2 className="h-5 w-5" />
+              </span>
+              <p className="font-mono text-sm leading-relaxed text-muted-foreground">
+                <span className="text-primary">$philosophy</span> = &quot;Ship
+                something dependable and well-architected — never clever and
+                fragile.&quot;;
+              </p>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Focus areas grid */}
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {focusAreas.map((area, i) => (
+            <Reveal key={area.title} delay={0.05 + i * 0.04}>
+              <div className="group flex h-full items-start gap-4 rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[var(--shadow-md)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  {area.icon}
+                </span>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">{area.title}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{area.desc}</p>
                 </div>
-              </Reveal>
-            ))}
-          </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

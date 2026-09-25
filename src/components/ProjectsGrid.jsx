@@ -2,215 +2,121 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { portfolioData } from "@/data/portfolio";
-import {
-  Search,
-  LayoutGrid,
-  List,
-  ArrowUpRight,
-  Layers,
-  Lock,
-  CheckCircle2,
-  X,
-} from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
+import { portfolioData } from "@/data/portfolio";
+import { getAllProjectIds } from "@/data/projectDetails";
+import { Search, ArrowUpRight, X, Layers, Lock, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 
 export default function ProjectsGrid() {
   const { projects, projectCategories } = portfolioData;
   const reduce = useReducedMotion();
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState("grid");
+  const [cat, setCat] = useState("All");
+  const [q, setQ] = useState("");
+  const detailIds = getAllProjectIds();
 
-  const filteredProjects = projects.filter((p) => {
-    const matchesCategory = activeCategory === "All" || p.category === activeCategory;
-    const matchesSearch =
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
+  const filtered = projects.filter((p) => {
+    const matchCat = cat === "All" || p.category === cat;
+    const matchQ = !q || [p.title, p.description, ...p.tags].some((s) => s.toLowerCase().includes(q.toLowerCase()));
+    return matchCat && matchQ;
   });
 
-  const featured = filteredProjects.find((p) => p.highlight);
-  const rest = filteredProjects.filter((p) => p !== featured);
+  const featured = filtered.find((p) => p.highlight);
+  const rest = filtered.filter((p) => p !== featured);
 
   return (
-    <section
-      id="projects"
-      className="relative scroll-mt-20 px-5 py-24 sm:px-8 md:py-32"
-    >
-      {/* Background accents */}
+    <section id="projects" className="relative scroll-mt-20 px-5 py-24 sm:px-8 md:py-32">
       <div className="pointer-events-none absolute right-0 top-1/4 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-[150px]" />
-      <div className="pointer-events-none absolute bottom-10 left-0 -z-10 h-80 w-80 rounded-full bg-accent/5 blur-[130px]" />
 
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <SectionHeading
-            index="03"
-            eyebrow="Projects"
-            title="Shipped, production systems."
-            description="Live platforms and mobile backends I&apos;ve designed, built, and maintained — spanning e-commerce, SaaS, booking, logistics, and enterprise work."
-          />
-          <Reveal delay={0.1}>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-card px-4 py-3">
+        {/* Header */}
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <Reveal>
+            <div className="flex items-center gap-3 text-primary">
+              <span className="h-px w-8 bg-primary/50" />
+              <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">03 / Projects</span>
+            </div>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Shipped, production systems.
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3">
                 <span className="font-mono text-xl font-bold text-primary">17</span>
-                <span className="text-xs leading-tight text-muted-foreground">
-                  Live web
-                  <br />
-                  platforms
-                </span>
+                <span className="text-xs text-muted-foreground leading-tight">Live<br />platforms</span>
               </div>
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-card px-4 py-3">
+              <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3">
                 <span className="font-mono text-xl font-bold text-primary">9</span>
-                <span className="text-xs leading-tight text-muted-foreground">
-                  Mobile app
-                  <br />
-                  backends
-                </span>
+                <span className="text-xs text-muted-foreground leading-tight">Mobile<br />backends</span>
               </div>
             </div>
           </Reveal>
         </div>
 
         {/* Toolbar */}
-        <Reveal delay={0.12} className="mt-10">
+        <Reveal delay={0.1} className="mt-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-              {projectCategories.map((cat) => {
-                const isActive = activeCategory === cat;
-                const count =
-                  cat === "All"
-                    ? projects.length
-                    : projects.filter((p) => p.category === cat).length;
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
+              {projectCategories.map((c) => {
+                const count = c === "All" ? projects.length : projects.filter((p) => p.category === c).length;
                 return (
                   <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
+                    key={c}
+                    onClick={() => setCat(c)}
                     className={cn(
                       "inline-flex shrink-0 items-center gap-1.5 rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-300",
-                      isActive
-                        ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-sm)]"
+                      cat === c
+                        ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
                     )}
-                    aria-pressed={isActive}
                   >
-                    {cat}
-                    <span
-                      className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[11px] font-bold",
-                        isActive
-                          ? "bg-primary-foreground/20"
-                          : "bg-muted text-muted-foreground"
-                      )}
-                    >
-                      {count}
-                    </span>
+                    {c}
+                    <span className={cn("rounded-full px-1.5 py-0.5 text-[11px] font-bold", cat === c ? "bg-primary-foreground/20" : "bg-muted")}>{count}</span>
                   </button>
                 );
               })}
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search tech or project..."
-                  aria-label="Search projects"
-                  className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-9 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    aria-label="Clear search"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-
-              <div className="flex items-center rounded-xl border border-border bg-card p-1">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  aria-label="Grid view"
-                  aria-pressed={viewMode === "grid"}
-                  className={cn(
-                    "rounded-lg p-2 transition-all",
-                    viewMode === "grid"
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <LayoutGrid className="h-4 w-4" />
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search..."
+                className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-9 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
+              />
+              {q && (
+                <button onClick={() => setQ("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
                 </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  aria-label="List view"
-                  aria-pressed={viewMode === "list"}
-                  className={cn(
-                    "rounded-lg p-2 transition-all",
-                    viewMode === "list"
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <List className="h-4 w-4" />
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </Reveal>
 
-        {/* Empty state */}
-        {filteredProjects.length === 0 && (
+        {/* Empty */}
+        {filtered.length === 0 && (
           <div className="mt-10 flex flex-col items-center gap-3 rounded-3xl border border-border bg-card py-20 text-center">
             <p className="text-lg font-semibold text-foreground">No projects found</p>
-            <p className="text-sm text-muted-foreground">
-              No project matched &quot;{searchQuery}&quot; in this category.
-            </p>
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setActiveCategory("All");
-              }}
-              className="mt-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-            >
-              Reset filters
-            </button>
+            <button onClick={() => { setQ(""); setCat("All"); }} className="mt-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Reset filters</button>
           </div>
         )}
 
-        {filteredProjects.length > 0 && (
-          <div className="mt-10">
-            {/* Featured project */}
-            {featured && viewMode === "grid" && (
-              <FeaturedProject project={featured} reduce={reduce} />
-            )}
+        {filtered.length > 0 && (
+          <div className="mt-8">
+            {/* Featured */}
+            {featured && <FeaturedCard project={featured} reduce={reduce} hasDetail={detailIds.includes(featured.id)} />}
 
-            {/* Regular projects */}
-            <motion.div
-              layout
-              className={cn(
-                "mt-6",
-                viewMode === "grid"
-                  ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
-                  : "flex flex-col gap-4"
-              )}
-            >
+            {/* Grid */}
+            <motion.div layout className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               <AnimatePresence mode="popLayout">
-                {rest.map((project, idx) => (
-                  <ProjectCard key={project.id || idx} project={project} idx={idx} mode={viewMode} reduce={reduce} />
+                {rest.map((p, i) => (
+                  <Card key={p.id} project={p} idx={i} reduce={reduce} hasDetail={detailIds.includes(p.id)} />
                 ))}
-                {featured && viewMode === "list" && (
-                  <ProjectCard key={featured.id} project={featured} idx={0} mode="list" reduce={reduce} />
-                )}
               </AnimatePresence>
             </motion.div>
           </div>
@@ -220,202 +126,100 @@ export default function ProjectsGrid() {
   );
 }
 
-function FeaturedProject({ project, reduce }) {
+function FeaturedCard({ project, reduce, hasDetail }) {
   return (
     <motion.article
       layout
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={reduce ? { opacity: 0 } : { opacity: 0, y: -20 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative grid overflow-hidden rounded-3xl border border-primary/25 bg-card shadow-[var(--shadow-md)] lg:grid-cols-[1.15fr_1fr]"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="neon-border group grid overflow-hidden rounded-3xl bg-card lg:grid-cols-[1.15fr_1fr]"
     >
-      {/* Image side */}
       <div className="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:h-full">
-        <Image
-          src={project.image}
-          alt={`${project.title} — interface preview`}
-          fill
-          priority
-          unoptimized
-          sizes="(max-width: 1024px) 100vw, 55vw"
-          className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-tr from-card via-card/25 to-transparent lg:bg-gradient-to-r" />
-
-        {/* Overlay badge */}
-        <div className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-foreground backdrop-blur-md">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-          Featured
-        </div>
+        <Image src={project.image} alt={project.title} fill unoptimized sizes="(max-width:1024px) 100vw, 55vw" className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-card via-card/20 to-transparent lg:bg-gradient-to-r" />
+        <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-foreground backdrop-blur-md">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary" />Featured
+        </span>
       </div>
 
-      {/* Content side */}
-      <div className="flex flex-col justify-center gap-4 p-7 sm:p-10">
+      <div className="flex flex-col justify-center gap-4 p-7 sm:p-9">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-muted text-primary">
-            {project.icon || <Layers className="h-5 w-5" />}
-          </span>
-          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            {project.category}
-          </span>
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-muted text-primary">{project.icon || <Layers className="h-4 w-4" />}</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{project.category}</span>
         </div>
-
-        <h3 className="text-2xl font-bold leading-tight tracking-[-0.02em] text-foreground sm:text-3xl">
-          {project.title}
-        </h3>
-
-        <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-lg border border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
-            >
-              {tag}
-            </span>
-          ))}
+        <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{project.title}</h3>
+        <p className="text-sm leading-relaxed text-muted-foreground">{project.description}</p>
+        <div className="flex flex-wrap gap-1.5">
+          {project.tags.map((t) => <span key={t} className="rounded-md border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">{t}</span>)}
         </div>
+        <div className="mt-2 flex flex-wrap gap-3">
+          {project.link && (
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]">
+              Visit live <ArrowUpRight className="h-4 w-4" />
+            </a>
+          )}
+          {hasDetail && (
+            <Link href={`/projects/${project.id}`} className="inline-flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground">
+              Case study <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          )}
+        </div>
+      </div>
+    </motion.article>
+  );
+}
 
-        <div className="mt-2 flex flex-wrap items-center gap-3">
+function Card({ project, idx, reduce, hasDetail }) {
+  return (
+    <motion.article
+      layout
+      initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 16 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.35, delay: Math.min(idx * 0.04, 0.25), ease: [0.22, 1, 0.36, 1] }}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[var(--shadow-md)]"
+    >
+      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+        <Image src={project.image} alt={project.title} fill unoptimized sizes="(max-width:768px) 100vw, 33vw" className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.05]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent opacity-50" />
+        {project.badge && (
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/80 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{project.badge}
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        <div className="flex items-start gap-2.5">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-primary">{project.icon || <Layers className="h-4 w-4" />}</span>
+          <div className="min-w-0">
+            <h3 className="text-[15px] font-semibold leading-snug text-foreground group-hover:text-primary transition-colors">{project.title}</h3>
+            {project.credentials && <div className="mt-0.5 flex items-center gap-1 font-mono text-[11px] text-muted-foreground"><Lock className="h-3 w-3" />{project.credentials}</div>}
+          </div>
+        </div>
+        <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">{project.description}</p>
+        <div className="mt-auto flex flex-wrap gap-1.5 border-t border-border/50 pt-3">
+          {project.tags.slice(0, 4).map((t) => <span key={t} className="rounded-md border border-border/60 bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">{t}</span>)}
+        </div>
+        <div className="flex flex-col gap-2">
           {project.link ? (
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-sm)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
-            >
-              Visit live platform
-              <ArrowUpRight className="h-4 w-4" />
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-between rounded-xl border border-border bg-muted/30 px-4 py-2 text-xs font-semibold text-foreground transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground">
+              Visit live <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           ) : (
-            <span className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-sm font-semibold text-success">
-              <CheckCircle2 className="h-4 w-4" />
-              Production API architecture
-            </span>
+            <div className="inline-flex w-full items-center justify-between rounded-xl border border-border/40 bg-muted/20 px-4 py-2 text-xs text-muted-foreground">
+              API backend <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+            </div>
+          )}
+          {hasDetail && (
+            <Link href={`/projects/${project.id}`} className="inline-flex w-full items-center justify-between rounded-xl border border-primary/20 bg-primary/5 px-4 py-2 text-xs font-semibold text-primary transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground">
+              View case study <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
           )}
         </div>
       </div>
     </motion.article>
-  );
-}
-
-function ProjectCard({ project, idx, mode, reduce }) {
-  const isGrid = mode === "grid";
-
-  return (
-    <motion.article
-      layout
-      initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 20 }}
-      transition={{ duration: 0.4, delay: reduce ? 0 : Math.min(idx * 0.04, 0.3), ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-md)]"
-    >
-      <div className={cn("flex", isGrid ? "flex-col" : "w-full flex-col sm:flex-row")}>
-        {/* Image */}
-        <div
-          className={cn(
-            "relative shrink-0 overflow-hidden bg-muted",
-            isGrid
-              ? "aspect-[16/9] w-full"
-              : "aspect-[16/8] w-full sm:aspect-auto sm:w-56 md:w-64"
-          )}
-        >
-          <Image
-            src={project.image}
-            alt={`${project.title} — project preview`}
-            fill
-            unoptimized
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent opacity-50" />
-
-          {project.badge && (
-            <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/85 px-2.5 py-1 text-[11px] font-semibold text-foreground backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              {project.badge}
-            </span>
-          )}
-
-          {project.link && (
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${project.title}`}
-              className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/85 text-foreground backdrop-blur-md transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-            </a>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="flex flex-1 flex-col justify-between gap-4 p-5">
-          <div>
-            <div className="mb-2 flex items-start gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-primary">
-                {project.icon || <Layers className="h-4 w-4" />}
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
-                  {project.title}
-                </h3>
-                {project.credentials && (
-                  <div className="mt-0.5 flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
-                    <Lock className="h-3 w-3 shrink-0" />
-                    <span className="truncate">{project.credentials}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {project.description}
-            </p>
-          </div>
-
-          <div>
-            <div className="mb-4 flex flex-wrap gap-1.5 border-t border-border/60 pt-3">
-              {project.tags.slice(0, 4).map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-md border border-border/70 bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {project.link ? (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-2 text-xs font-semibold text-foreground transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                Visit live platform
-                <ExternalArrow />
-              </a>
-            ) : (
-              <div className="inline-flex w-full items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-4 py-2 text-xs font-medium text-muted-foreground">
-                <span>API architecture & backend</span>
-                <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </motion.article>
-  );
-}
-
-function ExternalArrow() {
-  return (
-    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
   );
 }
