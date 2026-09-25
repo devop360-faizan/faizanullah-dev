@@ -27,50 +27,50 @@
 
 /* ─── Light ─── */
 :root {
-  --background: #fafafa;
-  --foreground: #0a0a0f;
+  --background: #faf9fc;
+  --foreground: #0f0720;
   --card: #ffffff;
   --elevated: #ffffff;
-  --muted: #f1f1f4;
-  --muted-foreground: #52525b;
-  --primary: #0891b2;
+  --muted: #f0edf6;
+  --muted-foreground: #64607a;
+  --primary: #7c3aed;
   --primary-foreground: #ffffff;
-  --accent: #059669;
-  --border: #e4e4e7;
-  --ring: rgba(8, 145, 178, 0.3);
+  --accent: #0891b2;
+  --border: #e4dff0;
+  --ring: rgba(124, 58, 237, 0.3);
   --success: #059669;
   --warning: #d97706;
   --error: #dc2626;
 
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.1), 0 24px 56px rgba(0,0,0,0.08);
+  --shadow-xs: 0 1px 2px rgba(15,7,32,0.05);
+  --shadow-sm: 0 2px 6px rgba(15,7,32,0.06), 0 6px 16px rgba(15,7,32,0.04);
+  --shadow-md: 0 4px 20px rgba(15,7,32,0.08), 0 12px 40px rgba(15,7,32,0.06);
+  --shadow-lg: 0 8px 30px rgba(15,7,32,0.10), 0 24px 60px rgba(15,7,32,0.08);
 
   color-scheme: light;
 }
 
 /* ─── Dark ─── */
 .dark {
-  --background: #000000;
-  --foreground: #f0f0f5;
-  --card: #0a0a0f;
-  --elevated: #111118;
-  --muted: #0d0d14;
-  --muted-foreground: #71717a;
-  --primary: #06b6d4;
-  --primary-foreground: #000000;
-  --accent: #10b981;
-  --border: #18181f;
-  --ring: rgba(6, 182, 212, 0.3);
+  --background: #030014;
+  --foreground: #eeeef0;
+  --card: #0f0a24;
+  --elevated: #170f30;
+  --muted: #120c28;
+  --muted-foreground: #8b8ba0;
+  --primary: #8b5cf6;
+  --primary-foreground: #ffffff;
+  --accent: #22d3ee;
+  --border: #1e1748;
+  --ring: rgba(139, 92, 246, 0.4);
   --success: #34d399;
   --warning: #fbbf24;
   --error: #f87171;
 
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.6);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.5);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.6), 0 12px 32px rgba(0,0,0,0.5);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.7), 0 24px 56px rgba(0,0,0,0.6);
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.7);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.6), 0 6px 16px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 20px rgba(3,0,20,0.7), 0 12px 40px rgba(3,0,20,0.5);
+  --shadow-lg: 0 8px 30px rgba(3,0,20,0.8), 0 24px 60px rgba(3,0,20,0.6);
 
   color-scheme: dark;
 }
@@ -111,7 +111,8 @@ body {
 /* ─── Design System Utilities ─── */
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--primary) 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -127,9 +128,9 @@ body {
 
 /* Glass card */
 .glass {
-  background: color-mix(in srgb, var(--card) 60%, transparent);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
 }
 
 /* Neon glow borders */
@@ -142,13 +143,13 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, var(--primary), var(--accent), transparent 60%);
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--primary) 80%, transparent);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.7;
   transition: opacity 0.3s;
 }
 .neon-border:hover::before {
